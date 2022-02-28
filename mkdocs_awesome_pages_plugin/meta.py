@@ -68,7 +68,7 @@ class MetaNavEnvCondition(MetaNavItem):
 
     @staticmethod
     def is_env_condition(item: str):
-        match = re.finditer(MetaNavEnvCondition._REGEX, item)
+        match = re.match(MetaNavEnvCondition._REGEX, item)
         return match.group(1) is not None
 
 
