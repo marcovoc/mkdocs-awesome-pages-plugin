@@ -4,6 +4,7 @@ import os
 from enum import Enum
 from pathlib import PurePath
 from typing import Optional, List, Union, Any, Iterator
+from typing_extensions import Self
 
 import yaml
 from wcmatch import glob
@@ -15,6 +16,7 @@ class DuplicateRestItemError(Exception):
 
 
 class MetaNavItem:
+
     def __init__(self, value: Union[str, List["MetaNavItem"]], title: Optional[str] = None):
         self.value = value
         self.title = title
@@ -29,31 +31,59 @@ class MetaNavItem:
     def from_yaml(item: Union[str, dict], context: str):
         if MetaNavRestItem.is_rest(item):
             return MetaNavRestItem(item)
+        
+        if MetaNavEnvCondition.is_env_condition(item):
+            return MetaNavEnvCondition(item)
 
-        if isinstance(item, str):
+        if isinstance(item, str) and MetaNavItem.is_env_condition_to_display(item):
             return MetaNavItem(item)
 
         if isinstance(item, dict) and len(item) == 1:
             (title, value) = list(item.items())[0]
             if isinstance(title, str):
-                if isinstance(value, str):
+                if isinstance(value, str) and MetaNavItem.is_env_condition_to_display(item):
                     return MetaNavItem(value, title)
                 elif isinstance(value, list):
                     return MetaNavItem([MetaNavItem.from_yaml(it, context) for it in value], title)
 
         raise TypeError("Invalid nav item format {type} [{context}]".format(type=item, context=context))
 
+    
+
+class MetaNavEnvCondition(MetaNavItem):
+
+    _REGEX = r"^(?:(?:[a-zA-z\d_\-])+.md)\s+\|\s+env=((?:(?:[A-Za-z\d_\-]+)\s*)+)"
+
+    def __init__(self, value: str):
+        super().__init__(value)
+
+        match = re.finditer(MetaNavEnvCondition._REGEX, value)
+
+        env_variables_set = set(match.group(1).split(" "))
+        envs_set = set(os.environ)
+        self.valid =  len(env_variables_set.intersection(envs_set)) > 0
+
+
+    def is_valid(self) -> bool:
+        return self.valid
+
+    @staticmethod
+    def is_env_condition(item: str):
+        match = re.finditer(MetaNavEnvCondition._REGEX, item)
+        return match.group(1) is not None
+
+
+
 
 class RestType(Enum):
     GLOB = "glob"
     REGEX = "regex"
-    ENV = "env"
     ALL = "all"
 
 
 class MetaNavRestItem(MetaNavItem):
 
-    _REGEX = r"^\.{3}\s*(?:\|\s*(flat)\s*)?\s*(?:\|\s*(?:(regex|glob|env)=)?(.*))?"
+    _REGEX = r"^\.{3}\s*(?:\|\s*(flat)\s*)?\s*(?:\|\s*(?:(regex|glob)=)?(.*))?"
 
     def __init__(self, value: str):
         super().__init__(value)
@@ -74,8 +104,6 @@ class MetaNavRestItem(MetaNavItem):
             return path is not None and glob.globmatch(path, self.pattern, flags=glob.GLOBSTAR)
         elif self.type == RestType.REGEX:
             return path is not None and re.search(self.pattern, PurePath(path).as_posix()) is not None
-        elif self.type == RestType.ENV:
-            return path is not None and self.pattern in os.environ 
         else:
             return True
 

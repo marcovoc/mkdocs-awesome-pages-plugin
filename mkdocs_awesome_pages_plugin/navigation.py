@@ -11,7 +11,7 @@ from mkdocs.structure.nav import (
 )
 from mkdocs.structure.pages import Page
 
-from .meta import Meta, MetaNavItem, MetaNavRestItem, RestItemList
+from .meta import Meta, MetaNavEnvCondition, MetaNavItem, MetaNavRestItem, RestItemList
 from .options import Options
 from .utils import dirname, basename, join_paths
 
@@ -96,14 +96,23 @@ class AwesomeNavigation:
         def _make_nav_rec(meta_nav: List[MetaNavItem]) -> List[Union[NavigationItem, MetaNavRestItem]]:
             result = []
             for meta_item in meta_nav:
+                is_item_found = meta_item.value in items_by_basename
                 if isinstance(meta_item, MetaNavRestItem):
                     rest_items.append(meta_item)
                     result.append(meta_item)
+                
+                elif isinstance(meta_item, MetaNavEnvCondition) and is_item_found:
+                    item = items_by_basename[meta_item.value]
+                    if meta_item.title is not None:
+                        item.title = meta_item.title
+                    if meta_item.is_valid():                        
+                        result.append(item)
+                    used_items.append(item)
 
                 elif isinstance(meta_item.value, list):
                     result.append(VirtualSection(meta_item.title, children=_make_nav_rec(meta_item.value)))
 
-                elif meta_item.value in items_by_basename:
+                elif is_item_found:
                     item = items_by_basename[meta_item.value]
                     if meta_item.title is not None:
                         item.title = meta_item.title
