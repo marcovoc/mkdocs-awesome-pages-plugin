@@ -67,9 +67,8 @@ class MetaNavEnvCondition(MetaNavItem):
         return self.valid
 
     @staticmethod
-    def is_env_condition(item: str):
-        match = re.match(MetaNavEnvCondition._REGEX, item)
-        return match is not None
+    def is_env_condition(item: Any):
+        return isinstance(item, str) and re.search(MetaNavEnvCondition._REGEX, item)
 
 
 
