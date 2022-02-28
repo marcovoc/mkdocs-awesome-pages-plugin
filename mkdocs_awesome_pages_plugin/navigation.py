@@ -96,12 +96,11 @@ class AwesomeNavigation:
         def _make_nav_rec(meta_nav: List[MetaNavItem]) -> List[Union[NavigationItem, MetaNavRestItem]]:
             result = []
             for meta_item in meta_nav:
-                is_item_found = meta_item.value in items_by_basename
                 if isinstance(meta_item, MetaNavRestItem):
                     rest_items.append(meta_item)
                     result.append(meta_item)
                 
-                elif isinstance(meta_item, MetaNavEnvCondition) and is_item_found:
+                elif isinstance(meta_item, MetaNavEnvCondition) and meta_item.value in items_by_basename:
                     item = items_by_basename[meta_item.value]
                     if meta_item.title is not None:
                         item.title = meta_item.title
@@ -112,7 +111,7 @@ class AwesomeNavigation:
                 elif isinstance(meta_item.value, list):
                     result.append(VirtualSection(meta_item.title, children=_make_nav_rec(meta_item.value)))
 
-                elif is_item_found:
+                elif meta_item.value in items_by_basename:
                     item = items_by_basename[meta_item.value]
                     if meta_item.title is not None:
                         item.title = meta_item.title
