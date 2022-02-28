@@ -69,7 +69,7 @@ class MetaNavEnvCondition(MetaNavItem):
     @staticmethod
     def is_env_condition(item: str):
         match = re.match(MetaNavEnvCondition._REGEX, item)
-        return match.group(1) is not None
+        return match is not None and match.group(1) is not None
 
 
 
