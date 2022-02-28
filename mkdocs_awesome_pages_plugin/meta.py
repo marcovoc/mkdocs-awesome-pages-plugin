@@ -34,13 +34,13 @@ class MetaNavItem:
         if MetaNavEnvCondition.is_env_condition(item):
             return MetaNavEnvCondition(item)
 
-        if isinstance(item, str) and MetaNavItem.is_env_condition_to_display(item):
+        if isinstance(item, str):
             return MetaNavItem(item)
 
         if isinstance(item, dict) and len(item) == 1:
             (title, value) = list(item.items())[0]
             if isinstance(title, str):
-                if isinstance(value, str) and MetaNavItem.is_env_condition_to_display(item):
+                if isinstance(value, str):
                     return MetaNavItem(value, title)
                 elif isinstance(value, list):
                     return MetaNavItem([MetaNavItem.from_yaml(it, context) for it in value], title)
