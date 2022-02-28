@@ -51,7 +51,7 @@ class MetaNavItem:
 
 class MetaNavEnvCondition(MetaNavItem):
 
-    _REGEX = r"^(?:([a-zA-z\d_\-])+.md)\s+\|\s+env=((?:(?:[A-Za-z\d_\-]+)\s*)+)"
+    _REGEX = r"^((?:[a-zA-z\d_\-])+.md)\s+\|\s+env=((?:(?:[A-Za-z\d_\-]+)\s*)+)"
 
     def __init__(self, value: str):
         match = re.match(MetaNavEnvCondition._REGEX, value)
