@@ -4,7 +4,6 @@ import os
 from enum import Enum
 from pathlib import PurePath
 from typing import Optional, List, Union, Any, Iterator
-from typing_extensions import Self
 
 import yaml
 from wcmatch import glob
