@@ -56,7 +56,7 @@ class MetaNavEnvCondition(MetaNavItem):
     def __init__(self, value: str):
         super().__init__(value)
 
-        match = re.finditer(MetaNavEnvCondition._REGEX, value)
+        match = re.match(MetaNavEnvCondition._REGEX, value)
 
         env_variables_set = set(match.group(1).split(" "))
         envs_set = set(os.environ)
