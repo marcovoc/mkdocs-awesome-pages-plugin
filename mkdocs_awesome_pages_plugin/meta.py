@@ -51,14 +51,14 @@ class MetaNavItem:
 
 class MetaNavEnvCondition(MetaNavItem):
 
-    _REGEX = r"^(?:(?:[a-zA-z\d_\-])+.md)\s+\|\s+env=((?:(?:[A-Za-z\d_\-]+)\s*)+)"
+    _REGEX = r"^(?:([a-zA-z\d_\-])+.md)\s+\|\s+env=((?:(?:[A-Za-z\d_\-]+)\s*)+)"
 
     def __init__(self, value: str):
-        super().__init__(value)
-
         match = re.match(MetaNavEnvCondition._REGEX, value)
 
-        env_variables_set = set(match.group(1).split(" "))
+        super().__init__(match.group(1))        
+
+        env_variables_set = set(match.group(2).split(" "))
         envs_set = set(os.environ)
         self.valid =  len(env_variables_set.intersection(envs_set)) > 0
 
@@ -69,7 +69,7 @@ class MetaNavEnvCondition(MetaNavItem):
     @staticmethod
     def is_env_condition(item: str):
         match = re.match(MetaNavEnvCondition._REGEX, item)
-        return match is not None and match.group(1) is not None
+        return match is not None
 
 
 
