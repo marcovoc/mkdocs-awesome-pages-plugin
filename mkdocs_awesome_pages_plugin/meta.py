@@ -1,5 +1,6 @@
 import collections.abc
 import re
+import os
 from enum import Enum
 from pathlib import PurePath
 from typing import Optional, List, Union, Any, Iterator
@@ -46,12 +47,13 @@ class MetaNavItem:
 class RestType(Enum):
     GLOB = "glob"
     REGEX = "regex"
+    ENV = "env"
     ALL = "all"
 
 
 class MetaNavRestItem(MetaNavItem):
 
-    _REGEX = r"^\.{3}\s*(?:\|\s*(flat)\s*)?\s*(?:\|\s*(?:(regex|glob)=)?(.*))?"
+    _REGEX = r"^\.{3}\s*(?:\|\s*(flat)\s*)?\s*(?:\|\s*(?:(regex|glob|env)=)?(.*))?"
 
     def __init__(self, value: str):
         super().__init__(value)
@@ -72,6 +74,8 @@ class MetaNavRestItem(MetaNavItem):
             return path is not None and glob.globmatch(path, self.pattern, flags=glob.GLOBSTAR)
         elif self.type == RestType.REGEX:
             return path is not None and re.search(self.pattern, PurePath(path).as_posix()) is not None
+        elif self.type == RestType.ENV:
+            return path is not None and self.pattern in os.environ 
         else:
             return True
 
