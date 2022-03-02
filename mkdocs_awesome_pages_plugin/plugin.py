@@ -49,7 +49,7 @@ class AwesomePagesPlugin(BasePlugin):
             print("Awesome_page: env var set " + variable_name)
             pc.State[variable_name] = " "
 
-    def on_files(files: Files, config: Config):
+    def on_files(self, files: Files, config: Config):
         to_removes = []
         for file in files:            
             if file.is_documentation_page():
