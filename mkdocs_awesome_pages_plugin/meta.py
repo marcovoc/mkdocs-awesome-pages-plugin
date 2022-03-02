@@ -1,6 +1,7 @@
 import collections.abc
 import re
 import os
+import pycond as pc
 from enum import Enum
 from pathlib import PurePath
 from typing import Optional, List, Union, Any, Iterator
@@ -51,16 +52,14 @@ class MetaNavItem:
 
 class MetaNavEnvCondition(MetaNavItem):
 
-    _REGEX = r"^((?:[a-zA-z\d_\-\.])+)\s+\|\s+env=((?:(?:[A-Za-z\d_\-]+)\s*)+)"
+    _REGEX = r"^((?:[a-zA-z\d_\-\.])+)\s+\|\s+env=(\[?(?:[A-Za-z\d_\-]+)\]?(?:\s+(?:(?:or)|(?:and))\s+\[?(?:[A-Za-z\d_\-]+)\]?)+)"
 
     def __init__(self, value: str):
         match = re.match(MetaNavEnvCondition._REGEX, value)
 
         super().__init__(match.group(1))        
 
-        env_variables_set = set(match.group(2).split(" "))
-        envs_set = set(os.environ)
-        self.valid =  len(env_variables_set.intersection(envs_set)) > 0
+        self.valid =  pc.pycond(match.group(2))()
 
 
     def is_valid(self) -> bool:
@@ -219,7 +218,8 @@ class Meta:
                             attribute=Meta.NAV_ATTRIBUTE, type=type(nav), context=path
                         )
                     )
-
+                for variable_name in os.environ.keys:
+                    pc.State[variable_name] = " "
                 nav = [MetaNavItem.from_yaml(item, path) for item in nav]
                 checked = set()
                 for item in nav:
