@@ -1,6 +1,8 @@
 import warnings
+import pycond as pc
 from pathlib import Path
 from typing import List, Optional, Union, Set
+
 
 from mkdocs.structure.nav import (
     Navigation as MkDocsNavigation,
@@ -214,6 +216,10 @@ class NavigationMeta:
         self.sections = {}
         self.docs_dir = docs_dir
         self.explicit_sections = explicit_sections
+
+        for variable_name in os.environ.keys():
+            print("Awesome_page: env var set " + variable_name)
+            pc.State[variable_name] = " "
 
         root_path = self._gather_metadata(items)
         self.root = Meta.try_load_from(join_paths(root_path, self.options.filename))
