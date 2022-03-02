@@ -1,6 +1,5 @@
 import collections.abc
 import re
-import os
 import pycond as pc
 from enum import Enum
 from pathlib import PurePath
