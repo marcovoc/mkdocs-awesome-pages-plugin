@@ -60,7 +60,7 @@ class MetaNavEnvCondition(MetaNavItem):
         super().__init__(match.group(1))        
         expre = match.group(2)
         self.valid =  pc.pycond(expre)()
-        print("Awesome_page: MetaNavEnvCondition valid " + self.valid + " value " + self.value + " expre " + expre)
+        print("Awesome_page: MetaNavEnvCondition valid " + str(self.valid) + " value " + self.value + " expre " + expre)
 
 
 
