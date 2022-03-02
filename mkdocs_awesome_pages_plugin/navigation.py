@@ -1,6 +1,4 @@
 import warnings
-import os
-import pycond as pc
 from pathlib import Path
 from typing import List, Optional, Union, Set
 
@@ -216,11 +214,7 @@ class NavigationMeta:
         self.options = options
         self.sections = {}
         self.docs_dir = docs_dir
-        self.explicit_sections = explicit_sections
-
-        for variable_name in os.environ.keys():
-            print("Awesome_page: env var set " + variable_name)
-            pc.State[variable_name] = " "
+        self.explicit_sections = explicit_sections        
 
         root_path = self._gather_metadata(items)
         self.root = Meta.try_load_from(join_paths(root_path, self.options.filename))

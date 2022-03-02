@@ -1,4 +1,7 @@
+from curses import meta
 import warnings
+import os
+import pycond as pc
 from typing import List, Dict
 
 from mkdocs.config import config_options, Config
@@ -12,7 +15,7 @@ from mkdocs.structure.nav import (
 )
 from mkdocs.structure.pages import Page
 
-from .meta import DuplicateRestItemError, MetaNavRestItem, RestItemList
+from .meta import DuplicateRestItemError, Meta, MetaNavEnvCondition, MetaNavRestItem, RestItemList
 from .navigation import AwesomeNavigation, get_by_type, NavigationItem
 from .options import Options
 
@@ -42,6 +45,27 @@ class AwesomePagesPlugin(BasePlugin):
         self.nav_config_with_rest = None
         self.rest_items = RestItemList()
         self.rest_blocks = {}
+        for variable_name in os.environ.keys():
+            print("Awesome_page: env var set " + variable_name)
+            pc.State[variable_name] = " "
+
+    def on_files(files, config):
+        to_removes = []
+        for file in files:            
+            if file.is_documentation_page():
+                abs_path = file.abs_src_path
+                filename = os.path.basename(abs_path).lower()
+                dir = os.path.dirname(abs_path)
+                meta = Meta.try_load_from(os.path.join(dir, ".pages"))
+                if meta != None and meta.nav != None:
+                    envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
+                    for env_meta in envs_meta:
+                        if env_meta.value.lower() == filename and not env_meta.is_valid():
+                            to_removes.append(file)
+                            break
+        for to_remove in to_removes:
+            files.remove(to_remove)
+
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
         explicit_nav = nav if config["nav"] else None
