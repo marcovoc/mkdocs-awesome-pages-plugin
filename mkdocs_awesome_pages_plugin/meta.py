@@ -58,8 +58,11 @@ class MetaNavEnvCondition(MetaNavItem):
         match = re.match(MetaNavEnvCondition._REGEX, value)
 
         super().__init__(match.group(1))        
+        expre = match.group(2)
+        self.valid =  pc.pycond(expre)()
+        print("Awesome_page: MetaNavEnvCondition valid " + self.valid + " value " + self.value + " expre " + expre)
 
-        self.valid =  pc.pycond(match.group(2))()
+
 
 
     def is_valid(self) -> bool:
@@ -219,6 +222,7 @@ class Meta:
                         )
                     )
                 for variable_name in os.environ.keys():
+                    print("Awesome_page: env var set" + variable_name)
                     pc.State[variable_name] = " "
                 nav = [MetaNavItem.from_yaml(item, path) for item in nav]
                 checked = set()
