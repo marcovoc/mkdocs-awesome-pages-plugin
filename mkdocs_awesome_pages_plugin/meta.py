@@ -218,7 +218,7 @@ class Meta:
                             attribute=Meta.NAV_ATTRIBUTE, type=type(nav), context=path
                         )
                     )
-                for variable_name in os.environ.keys:
+                for variable_name in os.environ.keys():
                     pc.State[variable_name] = " "
                 nav = [MetaNavItem.from_yaml(item, path) for item in nav]
                 checked = set()
