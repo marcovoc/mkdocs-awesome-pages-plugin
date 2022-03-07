@@ -101,13 +101,14 @@ class AwesomeNavigation:
                     rest_items.append(meta_item)
                     result.append(meta_item)
                 
-                elif isinstance(meta_item, MetaNavEnvCondition) and meta_item.value in items_by_basename:
-                    item = items_by_basename[meta_item.value]
-                    if meta_item.title is not None:
-                        item.title = meta_item.title
-                    if meta_item.is_valid():                        
-                        result.append(item)
-                    used_items.append(item)
+                elif isinstance(meta_item, MetaNavEnvCondition):
+                    if meta_item.value in items_by_basename:
+                        item = items_by_basename[meta_item.value]
+                        if meta_item.title is not None:
+                            item.title = meta_item.title
+                        if meta_item.is_valid():                        
+                            result.append(item)
+                        used_items.append(item)
 
                 elif isinstance(meta_item.value, list):
                     result.append(VirtualSection(meta_item.title, children=_make_nav_rec(meta_item.value)))
