@@ -91,7 +91,7 @@ class AwesomePagesPlugin(BasePlugin):
         for folder_to_clean in folders_to_clean:
             for file in files:
                 if os.path.splitext(file.abs_src_path)[1] != ".md" and not file.abs_src_path in not_md_to_keep:
-                    to_remove.append(file)
+                    to_removes.append(file)
         
         for to_remove in to_removes:
             print("Awesome_page: removed because not linked in filtered fodler: " + to_remove.abs_src_path)
