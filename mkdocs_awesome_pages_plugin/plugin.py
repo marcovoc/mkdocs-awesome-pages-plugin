@@ -76,7 +76,7 @@ class AwesomePagesPlugin(BasePlugin):
         
         for folder_to_clean in folders_to_clean:
             for file in files:
-                if os.path.splitext(file)[1] == ".md":
+                if os.path.splitext(file.src_dir)[1] == ".md":
                     print("src_dir: " + file.src_dir)
                     print("folder_to_clean: " + folder_to_clean)
                     print("")
