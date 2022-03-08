@@ -95,7 +95,7 @@ class AwesomePagesPlugin(BasePlugin):
                         to_removes.append(file)
         
         for to_remove in to_removes:
-            print("Awesome_page: removed because not linked in filtered fodler: " + to_remove.abs_src_path)
+            print("Awesome_page: removed because not linked in filtered folder: " + to_remove.abs_src_path)
             files.remove(to_remove)
 
 
