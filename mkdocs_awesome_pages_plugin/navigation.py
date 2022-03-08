@@ -13,7 +13,6 @@ from mkdocs.structure.nav import (
     _add_previous_and_next_links,
 )
 from mkdocs.structure.pages import Page
-from mkdocs_awesome_pages_plugin.plugin import AwesomePagesPlugin
 
 from .meta import Meta, MetaNavEnvCondition, MetaNavItem, MetaNavRestItem, RestItemList
 from .options import Options
@@ -46,6 +45,9 @@ class VirtualSection(Section):
 
 
 class AwesomeNavigation:
+
+    DELETED_FILES: List[str] = []
+
     def __init__(
         self,
         items: List[NavigationItem],
@@ -129,7 +131,7 @@ class AwesomeNavigation:
                 else:
                     supposed_path = os.path.join(os.path.dirname(meta.path), meta_item.value)
                     nav_file_deleted = False
-                    for deleted_file in AwesomePagesPlugin.DELETED_FILES:
+                    for deleted_file in AwesomeNavigation.DELETED_FILES:
                         if deleted_file.startswith(supposed_path):
                             nav_file_deleted = True
                             break

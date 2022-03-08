@@ -36,8 +36,6 @@ class AwesomePagesPlugin(BasePlugin):
     DEFAULT_META_FILENAME = ".pages"
     REST_PLACEHOLDER = "AWESOME_PAGES_REST"
 
-    DELETED_FILES: List[str] = []
-
     config_scheme = (
         ("filename", config_options.Type(str, default=DEFAULT_META_FILENAME)),
         ("collapse_single_pages", config_options.Type(bool, default=False)),
@@ -77,7 +75,7 @@ class AwesomePagesPlugin(BasePlugin):
         for to_remove in to_removes:
             files.remove(to_remove)
         
-        DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
+        AwesomeNavigation.DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
         to_removes = []
 
         for folder_to_clean in folders_to_clean:
@@ -102,7 +100,7 @@ class AwesomePagesPlugin(BasePlugin):
             print("Awesome_page: removed because not linked in filtered folder: " + to_remove.abs_src_path)
             files.remove(to_remove)
         
-        DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
+        AwesomeNavigation.DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
 
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
