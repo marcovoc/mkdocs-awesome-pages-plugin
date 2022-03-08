@@ -84,10 +84,11 @@ class AwesomePagesPlugin(BasePlugin):
                         print("toclean: " + file.abs_src_path)
                         with open(file.abs_src_path) as f:
                             file_text = f.read()
+                        file_dirname = os.path.dirname(file.abs_src_path)
                         for match in re.finditer(regex_image, file_text):
-                            not_md_to_keep.append(match.groups[0])
+                            not_md_to_keep.append(os.path.join(file_dirname, match.groups()[0]))
                         for match in re.finditer(regex_link, file_text):
-                            not_md_to_keep.append(match.groups[0])
+                            not_md_to_keep.append(os.path.join(file_dirname, match.groups()[0]))
 
         for to_keep in not_md_to_keep:
             print("to_keep" + to_keep)
