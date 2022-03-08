@@ -74,7 +74,7 @@ class AwesomePagesPlugin(BasePlugin):
         for to_remove in to_removes:
             files.remove(to_remove)
         
-        to_remove = []
+        to_removes = []
 
         for folder_to_clean in folders_to_clean:
             for file in files:
