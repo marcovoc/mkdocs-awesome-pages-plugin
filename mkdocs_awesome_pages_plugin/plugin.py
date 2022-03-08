@@ -81,9 +81,6 @@ class AwesomePagesPlugin(BasePlugin):
         for folder_to_clean in folders_to_clean:
             for file in files:
                 if os.path.splitext(file.abs_src_path)[1] == ".md":
-                    print("folder_to_clean: " + folder_to_clean)
-                    print("file.abs_src_path: " + file.abs_src_path)
-                    print("")
                     if  str(file.abs_src_path).startswith(folder_to_clean):
                         with open(file.abs_src_path) as f:
                             file_text = f.read()
