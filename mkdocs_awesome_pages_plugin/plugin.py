@@ -76,11 +76,11 @@ class AwesomePagesPlugin(BasePlugin):
         
         for folder_to_clean in folders_to_clean:
             for file in files:
-                if os.path.splitext(file.src_path)[1] == ".md":
-                    print("src_dir: " + file.src_path)
+                if os.path.splitext(file.abs_src_path)[1] == ".md":
+                    print("abs_src_path: " + file.abs_src_path)
                     print("folder_to_clean: " + folder_to_clean)
                     print("")
-                    if  file.src_path == folder_to_clean:
+                    if  file.abs_src_path == folder_to_clean:
                         with open(file) as f:
                             file_text = f.read()
                             for match in re.finditer(regex_image, file_text):
@@ -89,7 +89,7 @@ class AwesomePagesPlugin(BasePlugin):
                                 not_md_to_keep.append(match.groups[0])
 
         for to_keep in not_md_to_keep:
-            print(to_keep)
+            print("to_keep" + to_keep)
 
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
