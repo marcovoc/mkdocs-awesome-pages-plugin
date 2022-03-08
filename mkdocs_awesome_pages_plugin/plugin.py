@@ -74,14 +74,12 @@ class AwesomePagesPlugin(BasePlugin):
         for to_remove in to_removes:
             files.remove(to_remove)
         
+        to_remove = []
+
         for folder_to_clean in folders_to_clean:
             for file in files:
                 if os.path.splitext(file.abs_src_path)[1] == ".md":
-                    print("abs_src_path: " + file.abs_src_path)
-                    print("folder_to_clean: " + folder_to_clean)
-                    print("")
                     if  str(file.abs_src_path).startswith(folder_to_clean):
-                        print("toclean: " + file.abs_src_path)
                         with open(file.abs_src_path) as f:
                             file_text = f.read()
                         file_dirname = os.path.dirname(file.abs_src_path)
@@ -90,8 +88,14 @@ class AwesomePagesPlugin(BasePlugin):
                         for match in re.finditer(regex_link, file_text):
                             not_md_to_keep.append(os.path.join(file_dirname, match.groups()[0]))
 
-        for to_keep in not_md_to_keep:
-            print("to_keep" + to_keep)
+        for folder_to_clean in folders_to_clean:
+            for file in files:
+                if os.path.splitext(file.abs_src_path)[1] != ".md" and not file.abs_src_path in not_md_to_keep:
+                    to_remove.append(file)
+        
+        for to_remove in to_removes:
+            print("Awesome_page: removed because not linked in filtered fodler: " + to_remove.abs_src_path)
+            files.remove(to_remove)
 
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
