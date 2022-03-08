@@ -1,3 +1,5 @@
+from operator import truediv
+import os
 import warnings
 from pathlib import Path
 from typing import List, Optional, Union, Set
@@ -11,6 +13,7 @@ from mkdocs.structure.nav import (
     _add_previous_and_next_links,
 )
 from mkdocs.structure.pages import Page
+from mkdocs_awesome_pages_plugin.plugin import AwesomePagesPlugin
 
 from .meta import Meta, MetaNavEnvCondition, MetaNavItem, MetaNavRestItem, RestItemList
 from .options import Options
@@ -124,11 +127,18 @@ class AwesomeNavigation:
                     result.append(Link(meta_item.title, meta_item.value))
 
                 else:
-                    warning = NavEntryNotFound(meta_item.value, meta.path)
-                    if self.options.strict:
-                        raise warning
-                    else:
-                        print('Awesome_page: Nav entry "{entry}" not found. [{context}] maybe is a filtered folder'.format(entry=meta_item.value, context=meta.path))
+                    supposed_path = os.path.join(os.path.dirname(meta.path), meta_item.value)
+                    nav_file_deleted = False
+                    for deleted_file in AwesomePagesPlugin.DELETED_FILES:
+                        if deleted_file.startswith(supposed_path):
+                            nav_file_deleted = True
+                            break
+                    if not nav_file_deleted:
+                        warning = NavEntryNotFound(meta_item.value, meta.path)
+                        if self.options.strict:
+                            raise warning
+                        else:
+                            print('Awesome_page: Nav entry "{entry}" not found. [{context}] maybe is a filtered folder'.format(entry=meta_item.value, context=meta.path))
             return result
 
         result = _make_nav_rec(meta.nav)
