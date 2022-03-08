@@ -80,7 +80,8 @@ class AwesomePagesPlugin(BasePlugin):
                     print("abs_src_path: " + file.abs_src_path)
                     print("folder_to_clean: " + folder_to_clean)
                     print("")
-                    if  file.abs_src_path == folder_to_clean:
+                    if  str(file.abs_src_path).startswith(folder_to_clean):
+                        print("toclean: " + file.abs_src_path)
                         with open(file) as f:
                             file_text = f.read()
                             for match in re.finditer(regex_image, file_text):
