@@ -21,7 +21,7 @@ NavigationItem = Union[Page, Section, Link]
 
 class NavEntryNotFound(Warning):
     def __init__(self, entry: str, context: str):
-        super().__init__('Nav entry "{entry}" not found. [{context}]'.format(entry=entry, context=context))
+        super().__init__('Nav entry "{entry}" not found. [{context}] maybe is a filtered folder'.format(entry=entry, context=context))
 
 
 class TitleInRootHasNoEffect(Warning):
@@ -128,7 +128,7 @@ class AwesomeNavigation:
                     if self.options.strict:
                         raise warning
                     else:
-                        warnings.warn(warning)
+                        print("Awesome_page: " + warning)
             return result
 
         result = _make_nav_rec(meta.nav)
