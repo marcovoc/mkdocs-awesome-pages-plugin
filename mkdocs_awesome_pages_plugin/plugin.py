@@ -76,11 +76,11 @@ class AwesomePagesPlugin(BasePlugin):
         
         for folder_to_clean in folders_to_clean:
             for file in files:
-                if os.path.splitext(file.src_dir)[1] == ".md":
-                    print("src_dir: " + file.src_dir)
+                if os.path.splitext(file.src_path)[1] == ".md":
+                    print("src_dir: " + file.src_path)
                     print("folder_to_clean: " + folder_to_clean)
                     print("")
-                    if  file.src_dir == folder_to_clean:
+                    if  file.src_path == folder_to_clean:
                         with open(file) as f:
                             file_text = f.read()
                             for match in re.finditer(regex_image, file_text):
