@@ -267,7 +267,7 @@ class Meta:
                         )
                     )
             if filter_not_referenced is not None:
-                if not isinstance(hide, bool):
+                if not isinstance(filter_not_referenced, bool):
                     raise TypeError(
                         'Expected "{attribute}" attribute to be a boolean - got {type} [{context}]'.format(
                             attribute=Meta.FILTER_NOT_REFERENCED_ATTRIBUTE,
