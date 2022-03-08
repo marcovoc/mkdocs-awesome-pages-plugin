@@ -3,6 +3,7 @@ import warnings
 import os
 import pycond as pc
 from typing import List, Dict
+import re
 
 from mkdocs.config import config_options, Config
 from mkdocs.plugins import BasePlugin
@@ -38,7 +39,7 @@ class AwesomePagesPlugin(BasePlugin):
     config_scheme = (
         ("filename", config_options.Type(str, default=DEFAULT_META_FILENAME)),
         ("collapse_single_pages", config_options.Type(bool, default=False)),
-        ("strict", config_options.Type(bool, default=True)),
+        ("strict", config_options.Type(bool, default=True))
     )
 
     def __init__(self):
@@ -50,6 +51,10 @@ class AwesomePagesPlugin(BasePlugin):
             pc.State[variable_name] = " "
 
     def on_files(self, files: Files, config: Config):
+        regex_link = r"<\s*a\s+(?:(?:href=\"([\w\d\.]+)\"\s*)|([\w=]*\"([\w\d\.]+)\"\s*))+>"
+        regex_image = r"!\[[\w\d]*\]\(([\w\/\.]+)\)"
+        folders_to_clean = []
+        not_md_to_keep = []
         to_removes = []
         for file in files:            
             if file.is_documentation_page():
@@ -58,13 +63,29 @@ class AwesomePagesPlugin(BasePlugin):
                 dir = os.path.dirname(abs_path)
                 meta = Meta.try_load_from(os.path.join(dir, ".pages"))
                 if meta != None and meta.nav != None:
+                    if meta.filter_not_referenced:
+                        folders_to_clean.append(dir)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
                         if env_meta.value.lower() == filename and not env_meta.is_valid():
                             to_removes.append(file)
                             break
+        
         for to_remove in to_removes:
             files.remove(to_remove)
+        
+        for folder_to_clean in folders_to_clean:
+            for file in files:
+                if  file.src_dir == folder_to_clean and os.path.splitext(file)[1] == ".md":
+                    with open(file) as f:
+                        file_text = f.read()
+                        for match in re.finditer(regex_image, file_text):
+                            not_md_to_keep.append(match.groups[0])
+                        for match in re.finditer(regex_link, file_text):
+                            not_md_to_keep.append(match.groups[0])
+
+        for to_keep in not_md_to_keep:
+            print(to_keep)
 
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
