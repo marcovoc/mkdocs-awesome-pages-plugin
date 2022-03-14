@@ -105,16 +105,24 @@ class AwesomePagesPlugin(BasePlugin):
             to_ignores = [os.path.join(folder_to_clean, to_ignore) for to_ignore in ["assets", "search", "sitemap.xml", "sitemap.xml.gz"]]
             print(str(to_ignores))
             for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
+                is_to_ignore = False
                 for to_ignore in to_ignores:
                         if source_dir.startswith(to_ignore):
-                            continue
+                            is_to_ignore=True
+                            break
+                if is_to_ignore:
+                        continue
                 for filename in filenames:
                     if str(filename).lower().endswith(".html"):
                         continue
                     path = os.path.normpath(os.path.join(source_dir, filename))
+                    is_to_ignore = False
                     for to_ignore in to_ignores:
                         if path.startswith(to_ignore):
-                            continue
+                            is_to_ignore=True
+                            break
+                    if is_to_ignore:
+                        continue
                     if path not in self.REFERENCED_FILES_EXCEPT_HTML:
                         print("Awesome_page: post_build file to_remove " + path)
                         if path not in to_removes:
