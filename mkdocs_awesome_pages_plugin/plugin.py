@@ -66,6 +66,7 @@ class AwesomePagesPlugin(BasePlugin):
                 meta = Meta.try_load_from(os.path.join(dir_src, ".pages"))
                 if meta != None and meta.nav != None:
                     if meta.filter_not_referenced:
+                        print("folder_to_clean: " + dir_dest)
                         self.FOLDERS_TO_CLEAN.append(dir_dest)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
@@ -103,9 +104,8 @@ class AwesomePagesPlugin(BasePlugin):
                 relative_dir = os.path.relpath(source_dir, folder_to_clean)
                 for filename in filenames:
                     path = os.path.normpath(os.path.join(relative_dir, filename))
-                    print("Awesome_page: post_build file " + path)
                     if str(path).startswith(folder_to_clean) and not path in self.REFERENCED_FILES_EXCEPT_HTML:
-                        print("Awesome_page: post_build file to_remove")
+                        print("Awesome_page: post_build file to_remove " + path)
                         if not path in to_removes:
                             to_removes.append(path)
         for to_remove in to_removes:
