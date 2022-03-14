@@ -65,10 +65,11 @@ class AwesomePagesPlugin(BasePlugin):
                 dir_dest = os.path.dirname(file.abs_dest_path)
                 meta = Meta.try_load_from(os.path.join(dir_src, ".pages"))
                 if meta != None and meta.nav != None:
-                    if meta.filter_not_referenced:
-                        print("folder_to_clean: " + dir_dest)
-                        print("file.abs_dest_path: " + file.abs_dest_path)
-                        self.FOLDERS_TO_CLEAN.append(dir_dest)
+                    if meta.filter_not_referenced:                        
+                        if(dir_dest not in self.FOLDERS_TO_CLEAN):
+                            print("folder_to_clean: " + dir_dest)
+                            print("file.abs_dest_path: " + file.abs_dest_path)
+                            self.FOLDERS_TO_CLEAN.append(dir_dest)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
                         if env_meta.value.lower() == filename and not env_meta.is_valid():
@@ -101,11 +102,18 @@ class AwesomePagesPlugin(BasePlugin):
         print(str(self.REFERENCED_FILES_EXCEPT_HTML))
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
             print("Awesome_page: post_build folder_to_clean " + folder_to_clean)
+            to_ignores = [os.path.join(folder_to_clean, to_ignore) for to_ignore in ["assets", "search", "sitemap.xml", "sitemap.xml.gz"]]
             for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
-                relative_dir = os.path.relpath(source_dir, folder_to_clean)
+                relative_dir = os.path.normpath(os.path.relpath(source_dir, folder_to_clean))
+                for to_ignore in to_ignores:
+                        if relative_dir.startswith(to_ignore):
+                            continue
                 for filename in filenames:
                     path = os.path.normpath(os.path.join(relative_dir, filename))
-                    if str(path).startswith(folder_to_clean) and not path in self.REFERENCED_FILES_EXCEPT_HTML:
+                    for to_ignore in to_ignores:
+                        if path.startswith(to_ignore):
+                            continue
+                    if not path in self.REFERENCED_FILES_EXCEPT_HTML:
                         print("Awesome_page: post_build file to_remove " + path)
                         if not path in to_removes:
                             to_removes.append(path)
