@@ -104,14 +104,13 @@ class AwesomePagesPlugin(BasePlugin):
             print("Awesome_page: post_build folder_to_clean " + folder_to_clean)
             to_ignores = [os.path.join(folder_to_clean, to_ignore) for to_ignore in ["assets", "search", "sitemap.xml", "sitemap.xml.gz"]]
             for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
-                relative_dir = os.path.normpath(os.path.relpath(source_dir, folder_to_clean))
                 for to_ignore in to_ignores:
-                        if relative_dir.startswith(to_ignore):
+                        if source_dir.startswith(to_ignore):
                             continue
                 for filename in filenames:
                     if str(filename).lower().endswith(".html"):
                         continue
-                    path = os.path.normpath(os.path.join(relative_dir, filename))
+                    path = os.path.normpath(os.path.join(source_dir, filename))
                     for to_ignore in to_ignores:
                         if path.startswith(to_ignore):
                             continue
