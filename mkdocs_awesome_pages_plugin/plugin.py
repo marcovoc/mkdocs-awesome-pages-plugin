@@ -67,6 +67,7 @@ class AwesomePagesPlugin(BasePlugin):
                 if meta != None and meta.nav != None:
                     if meta.filter_not_referenced:
                         print("folder_to_clean: " + dir_dest)
+                        print("file.abs_dest_path: " + file.abs_dest_path)
                         self.FOLDERS_TO_CLEAN.append(dir_dest)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
