@@ -8,11 +8,12 @@ import re
 from mkdocs.config import config_options, Config
 from mkdocs.plugins import BasePlugin
 from mkdocs.structure.files import Files, File
+from mkdocs.structure.pages import Page
 from mkdocs.structure.nav import (
     Navigation as MkDocsNavigation,
     get_navigation,
     Section,
-    Link,
+    Link
 )
 from mkdocs.structure.pages import Page
 
@@ -33,6 +34,9 @@ class NavPluginOrder(Warning):
 
 class AwesomePagesPlugin(BasePlugin):
 
+    REFERENCED_FILES_EXCEPT_HTML = []
+    FOLDERS_TO_CLEAN = []
+
     DEFAULT_META_FILENAME = ".pages"
     REST_PLACEHOLDER = "AWESOME_PAGES_REST"
 
@@ -52,20 +56,17 @@ class AwesomePagesPlugin(BasePlugin):
 
     def on_files(self, files: Files, config: Config):
         DELETED_FILES = []
-        regex_link = r"<\s*a\s+(?:(?:href=\"([\w\d\.]+)\"\s*)|([\w=]*\"([\w\d\.]+)\"\s*))+>"
-        regex_image = r"!\[[\w\d]*\]\(([\w\/\.]+)\)"
-        folders_to_clean = []
-        not_md_to_keep = []
         to_removes = []
         for file in files:            
             if file.is_documentation_page():
-                abs_path = file.abs_src_path
-                filename = os.path.basename(abs_path).lower()
-                dir = os.path.dirname(abs_path)
-                meta = Meta.try_load_from(os.path.join(dir, ".pages"))
+                abs_src_path = file.abs_src_path
+                filename = os.path.basename(abs_src_path).lower()
+                dir_src = os.path.dirname(abs_src_path)
+                dir_dest = os.path.dirname(file.abs_dest_path)
+                meta = Meta.try_load_from(os.path.join(dir_src, ".pages"))
                 if meta != None and meta.nav != None:
                     if meta.filter_not_referenced:
-                        folders_to_clean.append(dir)
+                        self.FOLDERS_TO_CLEAN.append(dir_dest)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
                         if env_meta.value.lower() == filename and not env_meta.is_valid():
@@ -76,31 +77,37 @@ class AwesomePagesPlugin(BasePlugin):
             files.remove(to_remove)
         
         AwesomeNavigation.DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
+
+    def on_page_content(self, html: str, page: Page, files: Files):
+        #capture <a href="(path)">link name</a> or <img src="(path)"/>
+        regex_link = r"<\s*(?:(?:a)|(?:img))\s+(?:(?:(?:(?:href)|(?:src))=\"([\w\d\.\-\/]*)\"\s*)|(?:[\w=]*\"(?:[\w\d\.\-\/]*)\"\s*))+\/?>"
+        found = False
+        for folder_to_clean in self.FOLDERS_TO_CLEAN:
+            if  str(page.file.abs_src_path).startswith(folder_to_clean):
+                found = True
+                break
+        if found:
+            file_dirname = os.path.dirname(page.file.abs_dest_path)
+            for match in re.finditer(regex_link, html):
+                if not match.group()[0].lower().endswith(".html"):
+                    self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.groups()[1])))
+
+    def on_post_build(self, config: Config):
         to_removes = []
-
-        for folder_to_clean in folders_to_clean:
-            for file in files:
-                if os.path.splitext(file.abs_src_path)[1] == ".md":
-                    if  str(file.abs_src_path).startswith(folder_to_clean):
-                        with open(file.abs_src_path) as f:
-                            file_text = f.read()
-                        file_dirname = os.path.dirname(file.abs_src_path)
-                        for match in re.finditer(regex_image, file_text):
-                            not_md_to_keep.append(os.path.join(file_dirname, match.groups()[0]))
-                        for match in re.finditer(regex_link, file_text):
-                            not_md_to_keep.append(os.path.join(file_dirname, match.groups()[0]))
-
-        for folder_to_clean in folders_to_clean:
-            for file in files:
-                if os.path.splitext(file.abs_src_path)[1] != ".md" and str(file.abs_src_path).startswith(folder_to_clean) and not file.abs_src_path in not_md_to_keep:
-                    if not file in to_removes:
-                        to_removes.append(file)
-        
+        for folder_to_clean in self.FOLDERS_TO_CLEAN:
+            for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
+                relative_dir = os.path.relpath(source_dir, folder_to_clean)
+                for filename in filenames:
+                    path = os.path.normpath(os.path.join(relative_dir, filename))
+                    if os.path.splitext(path)[1] != ".md" and str(path).startswith(folder_to_clean) and not path in self.REFERENCED_FILES_EXCEPT_HTML:
+                        if not path in to_removes:
+                            to_removes.append(path)
         for to_remove in to_removes:
-            print("Awesome_page: removed because not linked in filtered folder: " + to_remove.abs_src_path)
-            files.remove(to_remove)
-        
-        AwesomeNavigation.DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
+            print("Awesome_page: removed because not linked in filtered folder: " + to_remove)
+            os.remove(to_remove)
+            while len(os.listdir(os.path.dirname(to_remove))) == 0:
+                to_remove = os.path.dirname(to_remove)
+                os.remove(to_remove)
 
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
