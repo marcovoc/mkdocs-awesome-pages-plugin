@@ -103,6 +103,7 @@ class AwesomePagesPlugin(BasePlugin):
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
             print("Awesome_page: post_build folder_to_clean " + folder_to_clean)
             to_ignores = [os.path.join(folder_to_clean, to_ignore) for to_ignore in ["assets", "search", "sitemap.xml", "sitemap.xml.gz"]]
+            print(str(to_ignores))
             for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
                 for to_ignore in to_ignores:
                         if source_dir.startswith(to_ignore):
@@ -123,7 +124,7 @@ class AwesomePagesPlugin(BasePlugin):
             os.remove(to_remove)
             while len(os.listdir(os.path.dirname(to_remove))) == 0:
                 to_remove = os.path.dirname(to_remove)
-                os.remove(to_remove)
+                os.rmdir(to_remove)
 
 
     def on_nav(self, nav: MkDocsNavigation, config: Config, files: Files):
