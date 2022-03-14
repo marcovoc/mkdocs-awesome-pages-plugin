@@ -97,7 +97,6 @@ class AwesomePagesPlugin(BasePlugin):
 
     def on_post_build(self, config: Config):
         to_removes = []
-        print(str(self.REFERENCED_FILES_EXCEPT_HTML))
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
             print("Awesome_page: post_build folder_to_clean " + folder_to_clean)
             to_ignores = [os.path.join(folder_to_clean, to_ignore) for to_ignore in ["assets", "search", "sitemap.xml", "sitemap.xml.gz"]]
