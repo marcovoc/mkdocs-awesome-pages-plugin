@@ -90,6 +90,7 @@ class AwesomePagesPlugin(BasePlugin):
             file_dirname = os.path.dirname(page.file.abs_dest_path)
             for match in re.finditer(regex_link, html):
                 if not match.group()[0].lower().endswith(".html"):
+                    print(match.string)
                     self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.groups()[1])))
 
     def on_post_build(self, config: Config):
