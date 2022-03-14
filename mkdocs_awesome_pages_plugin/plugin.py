@@ -66,7 +66,9 @@ class AwesomePagesPlugin(BasePlugin):
                 dir_src = os.path.dirname(abs_src_path)
                 dir_dest = os.path.dirname(file.abs_dest_path)
                 meta = Meta.try_load_from(os.path.join(dir_src, ".pages"))
+                print(".page " + os.path.join(dir_src, ".pages"))  
                 if meta != None and meta.nav != None:
+                    print("meta loaded")
                     if meta.filter_not_referenced:                        
                         if(dir_dest not in self.FOLDERS_TO_CLEAN):
                             print("folder_to_clean: " + dir_dest)
@@ -74,6 +76,8 @@ class AwesomePagesPlugin(BasePlugin):
                             self.FOLDERS_TO_CLEAN.append(dir_dest)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
+                        print("env_meta.value.lower() " + env_meta.value.lower())
+                        print("filename " + filename)
                         if env_meta.value.lower() == filename and not env_meta.is_valid():
                             env_meta.print_explaination()
                             to_removes.append(file)
