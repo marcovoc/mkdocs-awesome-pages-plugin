@@ -57,27 +57,19 @@ class AwesomePagesPlugin(BasePlugin):
     def on_files(self, files: Files, config: Config):
         DELETED_FILES = []
         to_removes = []
-        for file in files:
-            print("before is doc " + file.abs_src_path)           
+        for file in files:        
             if file.is_documentation_page():
-                print("after is doc " + file.abs_src_path)  
                 abs_src_path = file.abs_src_path
                 filename = os.path.basename(abs_src_path).lower()
                 dir_src = os.path.dirname(abs_src_path)
                 dir_dest = os.path.dirname(file.abs_dest_path)
                 meta = Meta.try_load_from(os.path.join(dir_src, ".pages"))
-                print(".page " + os.path.join(dir_src, ".pages"))  
                 if meta != None and meta.nav != None:
-                    print("meta loaded")
                     if meta.filter_not_referenced:                        
                         if(dir_dest not in self.FOLDERS_TO_CLEAN):
-                            print("folder_to_clean: " + dir_dest)
-                            print("file.abs_dest_path: " + file.abs_dest_path)
                             self.FOLDERS_TO_CLEAN.append(dir_dest)
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
-                        print("env_meta.value.lower() " + env_meta.value.lower())
-                        print("filename " + filename)
                         if env_meta.value.lower() == filename and not env_meta.is_valid():
                             env_meta.print_explaination()
                             to_removes.append(file)
@@ -105,12 +97,10 @@ class AwesomePagesPlugin(BasePlugin):
 
     def on_post_build(self, config: Config):
         to_removes = []
-        print("Awesome_page: post_build")
         print(str(self.REFERENCED_FILES_EXCEPT_HTML))
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
             print("Awesome_page: post_build folder_to_clean " + folder_to_clean)
             to_ignores = [os.path.join(folder_to_clean, to_ignore) for to_ignore in ["assets", "search", "sitemap.xml", "sitemap.xml.gz"]]
-            print(str(to_ignores))
             for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
                 is_to_ignore = False
                 for to_ignore in to_ignores:
@@ -131,7 +121,6 @@ class AwesomePagesPlugin(BasePlugin):
                     if is_to_ignore:
                         continue
                     if path not in self.REFERENCED_FILES_EXCEPT_HTML:
-                        print("Awesome_page: post_build file to_remove " + path)
                         if path not in to_removes:
                             to_removes.append(path)
         for to_remove in to_removes:
