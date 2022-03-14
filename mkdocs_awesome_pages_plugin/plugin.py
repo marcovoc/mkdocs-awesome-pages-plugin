@@ -58,8 +58,9 @@ class AwesomePagesPlugin(BasePlugin):
         DELETED_FILES = []
         to_removes = []
         for file in files:
-            print(file.abs_src_path)           
+            print("before is doc " + file.abs_src_path)           
             if file.is_documentation_page():
+                print("after is doc " + file.abs_src_path)  
                 abs_src_path = file.abs_src_path
                 filename = os.path.basename(abs_src_path).lower()
                 dir_src = os.path.dirname(abs_src_path)
