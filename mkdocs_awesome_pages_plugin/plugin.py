@@ -83,7 +83,7 @@ class AwesomePagesPlugin(BasePlugin):
         regex_link = r"<\s*(?:(?:a)|(?:img))\s+(?:(?:(?:(?:href)|(?:src))=\"([\w\d\.\-\/]*)\"\s*)|(?:[\w=]*\"(?:[\w\d\.\-\/]*)\"\s*))+\/?>"
         found = False
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
-            if  str(page.file.abs_src_path).startswith(folder_to_clean):
+            if  str(page.file.abs_dest_path).startswith(folder_to_clean):
                 found = True
                 break
         if found:
