@@ -90,6 +90,7 @@ class AwesomePagesPlugin(BasePlugin):
             file_dirname = os.path.dirname(page.file.abs_dest_path)
             for match in re.finditer(regex_link, html):
                 if not match.group()[0].lower().endswith(".html"):
+                    print(html)
                     print("Awesome_page: on_page_content catch " + match.group()[0])
                     self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.groups()[1])))
 
