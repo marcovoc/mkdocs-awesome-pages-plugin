@@ -109,6 +109,8 @@ class AwesomePagesPlugin(BasePlugin):
                         if relative_dir.startswith(to_ignore):
                             continue
                 for filename in filenames:
+                    if str(filename).lower().endswith(".html"):
+                        continue
                     path = os.path.normpath(os.path.join(relative_dir, filename))
                     for to_ignore in to_ignores:
                         if path.startswith(to_ignore):
