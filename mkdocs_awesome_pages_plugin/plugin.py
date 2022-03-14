@@ -94,11 +94,14 @@ class AwesomePagesPlugin(BasePlugin):
 
     def on_post_build(self, config: Config):
         to_removes = []
+        print("Awesome_page: post_build")
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
+            print("Awesome_page: post_build folder_to_clean " + folder_to_clean)
             for source_dir, dirnames, filenames in os.walk(folder_to_clean, followlinks=True):
                 relative_dir = os.path.relpath(source_dir, folder_to_clean)
                 for filename in filenames:
                     path = os.path.normpath(os.path.join(relative_dir, filename))
+                    print("Awesome_page: post_build file " + path)
                     if os.path.splitext(path)[1] != ".md" and str(path).startswith(folder_to_clean) and not path in self.REFERENCED_FILES_EXCEPT_HTML:
                         if not path in to_removes:
                             to_removes.append(path)
