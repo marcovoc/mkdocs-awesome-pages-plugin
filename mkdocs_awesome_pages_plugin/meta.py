@@ -61,9 +61,11 @@ class MetaNavEnvCondition(MetaNavItem):
         self.valid =  pc.pycond(expre)()
         self.expre = expre
 
-    def is_valid(self) -> bool:
-        print("Awesome_page: MetaNavEnvCondition valid " + str(self.valid) + " value " + self.value + " expre " + self.expre)
+    def is_valid(self) -> bool:        
         return self.valid
+    
+    def print_explaination(self):
+        print("Awesome_page: MetaNavEnvCondition valid " + str(self.valid) + " value " + self.value + " expre " + self.expre)
 
     @staticmethod
     def is_env_condition(item: Any):

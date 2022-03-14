@@ -73,6 +73,7 @@ class AwesomePagesPlugin(BasePlugin):
                     envs_meta = [env_meta for env_meta in meta.nav if isinstance(env_meta, MetaNavEnvCondition)]
                     for env_meta in envs_meta:
                         if env_meta.value.lower() == filename and not env_meta.is_valid():
+                            env_meta.print_explaination()
                             to_removes.append(file)
                             break
         
