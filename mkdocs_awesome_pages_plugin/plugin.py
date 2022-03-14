@@ -113,9 +113,11 @@ class AwesomePagesPlugin(BasePlugin):
                     for to_ignore in to_ignores:
                         if path.startswith(to_ignore):
                             continue
-                    if not path in self.REFERENCED_FILES_EXCEPT_HTML:
+                    print("Awesome_page: post_build file " + path)
+                    print("path not in self.REFERENCED_FILES_EXCEPT_HTML " + str(path not in self.REFERENCED_FILES_EXCEPT_HTML))
+                    if path not in self.REFERENCED_FILES_EXCEPT_HTML:
                         print("Awesome_page: post_build file to_remove " + path)
-                        if not path in to_removes:
+                        if path not in to_removes:
                             to_removes.append(path)
         for to_remove in to_removes:
             print("Awesome_page: removed because not linked in filtered folder: " + to_remove)
