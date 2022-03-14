@@ -78,7 +78,7 @@ class AwesomePagesPlugin(BasePlugin):
         
         AwesomeNavigation.DELETED_FILES.extend([to_remove.abs_src_path for to_remove in to_removes])
 
-    def on_page_content(self, html: str, page: Page, files: Files):
+    def on_page_content(self, html: str, page: Page, config: Config, files: Files):
         #capture <a href="(path)">link name</a> or <img src="(path)"/>
         regex_link = r"<\s*(?:(?:a)|(?:img))\s+(?:(?:(?:(?:href)|(?:src))=\"([\w\d\.\-\/]*)\"\s*)|(?:[\w=]*\"(?:[\w\d\.\-\/]*)\"\s*))+\/?>"
         found = False
