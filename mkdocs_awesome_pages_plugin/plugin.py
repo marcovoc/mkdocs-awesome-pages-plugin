@@ -57,7 +57,8 @@ class AwesomePagesPlugin(BasePlugin):
     def on_files(self, files: Files, config: Config):
         DELETED_FILES = []
         to_removes = []
-        for file in files:            
+        for file in files:
+            print(file.abs_src_path)           
             if file.is_documentation_page():
                 abs_src_path = file.abs_src_path
                 filename = os.path.basename(abs_src_path).lower()
