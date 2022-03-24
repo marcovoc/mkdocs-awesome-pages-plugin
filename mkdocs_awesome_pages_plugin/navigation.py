@@ -205,6 +205,10 @@ class AwesomeNavigation:
         if collapse is None:
             collapse = collapse_recursive
 
+        print("section:")
+        print(section)
+
+
         if collapse and len(section.children) == 1:
             return section.children[0]
         return section
