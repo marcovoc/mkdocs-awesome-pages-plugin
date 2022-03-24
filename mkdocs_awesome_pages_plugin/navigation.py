@@ -1,3 +1,4 @@
+from locale import strcoll
 from operator import truediv
 import os
 import warnings
@@ -66,7 +67,11 @@ class AwesomeNavigation:
         if self.meta.root.hide is not None:
             warnings.warn(HideInRootHasNoEffect(self.options.filename))
 
-        self.items = self._process_children(items, self.options.collapse_single_pages, self.meta.root)
+        collapse = self.options.collapse_single_pages
+
+        print("AwesomeNavigation collapse: " + str(collapse))
+
+        self.items = self._process_children(items, collapse, self.meta.root)
 
     def _process_children(self, children: List[NavigationItem], collapse: bool, meta: Meta) -> List[NavigationItem]:
         self._order(children, meta)
