@@ -205,8 +205,10 @@ class AwesomeNavigation:
         if collapse is None:
             collapse = collapse_recursive
 
-        if collapse and len(section.children) == 1:
-            return section.children[0]
+        not_deleted_children = [child for child in section.children if child not in AwesomeNavigation.DELETED_FILES]
+
+        if collapse and len(not_deleted_children) == 1:
+            return not_deleted_children[0]
         return section
 
     def to_mkdocs(self) -> MkDocsNavigation:
