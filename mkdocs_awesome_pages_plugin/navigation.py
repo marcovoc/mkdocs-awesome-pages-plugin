@@ -209,6 +209,7 @@ class AwesomeNavigation:
         print(section)
 
         print(section.children)
+        print(len(section.children))
         print(collapse)
 
 
