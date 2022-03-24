@@ -208,6 +208,8 @@ class AwesomeNavigation:
         print("section:")
         print(section)
 
+        print(section.children)
+
 
         if collapse and len(section.children) == 1:
             return section.children[0]

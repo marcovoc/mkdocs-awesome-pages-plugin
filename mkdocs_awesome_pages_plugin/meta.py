@@ -224,8 +224,6 @@ class Meta:
                             attribute=Meta.NAV_ATTRIBUTE, type=type(nav), context=path
                         )
                     )
-                print("nav:")
-                print(nav)
                 nav = [MetaNavItem.from_yaml(item, path) for item in nav]
                 checked = set()
                 for item in nav:
