@@ -69,8 +69,8 @@ class AwesomeNavigation:
 
         collapse = self.options.collapse_single_pages
 
-        if not self.meta.collapse_single_pages == None:
-            collapse = self.meta.collapse_single_pages
+        if not self.meta.root.collapse_single_pages == None:
+            collapse = self.meta.root.collapse_single_pages
 
         self.items = self._process_children(items, collapse, self.meta.root)
 
