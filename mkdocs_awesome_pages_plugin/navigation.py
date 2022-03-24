@@ -202,6 +202,9 @@ class AwesomeNavigation:
 
     @staticmethod
     def _collapse(section: Section, collapse: Optional[bool], collapse_recursive: bool) -> NavigationItem:
+        print("collapse value")
+        print(collapse)
+        print(collapse_recursive)
         if collapse is None:
             collapse = collapse_recursive
 
