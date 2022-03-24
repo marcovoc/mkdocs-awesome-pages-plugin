@@ -69,7 +69,8 @@ class AwesomeNavigation:
 
         collapse = self.options.collapse_single_pages
 
-        print("AwesomeNavigation collapse: " + str(collapse))
+        if not self.meta.collapse_single_pages == None:
+            collapse = self.meta.collapse_single_pages
 
         self.items = self._process_children(items, collapse, self.meta.root)
 
@@ -207,22 +208,10 @@ class AwesomeNavigation:
 
     @staticmethod
     def _collapse(section: Section, collapse: Optional[bool], collapse_recursive: bool) -> NavigationItem:
-        print("collapse value")
-        print(collapse)
-        print(collapse_recursive)
         if collapse is None:
             collapse = collapse_recursive
 
-        print("section:")
-        print(section)
-
-        print(section.children)
-        print(len(section.children))
-        print(collapse)
-
-
         if collapse and len(section.children) == 1:
-            print("collapse:" + str(section))
             return section.children[0]
         return section
 
