@@ -209,9 +209,11 @@ class AwesomeNavigation:
         print(section)
 
         print(section.children)
+        print(collapse)
 
 
         if collapse and len(section.children) == 1:
+            print("collapse:" + str(section))
             return section.children[0]
         return section
 
