@@ -83,7 +83,7 @@ class AwesomePagesPlugin(BasePlugin):
 
     def on_page_content(self, html: str, page: Page, config: Config, files: Files):
         #capture <a href="(path)">link name</a> or <img src="(path)"/>
-        regex_link = r"<\s*(?:(?:a)|(?:img))\s+(?:(?:(?:(?:href)|(?:src))=\"([\w\d\.\-\/]*)\"\s*)|(?:[\w=]*\"(?:(?:(?:\\\")|(?:[^\"]))*)\"\s*))+\/?>"
+        regex_link = r"<\s*(?:(?:a)|(?:img))\s+(?:(?:(?:(?:href)|(?:src))=\"([^\"]*\.[^\"]+)\"\s*)|(?:[\w=]*(?:\"(?:(?:(?:\\\")|(?:[^\"]))*)\")?\s*))+\/?>"
         found = False
         for folder_to_clean in self.FOLDERS_TO_CLEAN:
             if  str(page.file.abs_dest_path).startswith(folder_to_clean):
@@ -97,8 +97,6 @@ class AwesomePagesPlugin(BasePlugin):
                     if not group.lower().endswith(".html"):
                         print("Awesome_page: on_page_content catch " + match.groups()[0])
                         self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.group()[0])))
-                else:
-                    print("Awesome_page: on_page_content catch but can't extract value: " + match.string)
 
     def on_post_build(self, config: Config):
         to_removes = []
