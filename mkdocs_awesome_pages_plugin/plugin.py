@@ -91,9 +91,10 @@ class AwesomePagesPlugin(BasePlugin):
         if found:
             file_dirname = os.path.dirname(page.file.abs_dest_path)
             for match in re.finditer(regex_link, html):
-                if not match.groups()[0].lower().endswith(".html"):
-                    print("Awesome_page: on_page_content catch " + match.groups()[0])
-                    self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.group()[0])))
+                if len(match.groups()) > 0:
+                    if not match.groups()[0].lower().endswith(".html"):
+                        print("Awesome_page: on_page_content catch " + match.groups()[0])
+                        self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.group()[0])))
 
     def on_post_build(self, config: Config):
         to_removes = []
