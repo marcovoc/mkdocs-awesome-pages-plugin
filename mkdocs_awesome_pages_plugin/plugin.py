@@ -97,7 +97,6 @@ class AwesomePagesPlugin(BasePlugin):
                     if not group.lower().endswith(".html"):
                         print("Awesome_page: on_page_content catch " + group)
                         path = os.path.normpath(os.path.join(file_dirname, group))
-                        print("debug: path: " + path)
                         self.REFERENCED_FILES_EXCEPT_HTML.append(path)
 
     def on_post_build(self, config: Config):
