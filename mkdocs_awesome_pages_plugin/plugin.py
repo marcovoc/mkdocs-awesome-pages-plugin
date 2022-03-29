@@ -1,4 +1,5 @@
 from curses import meta
+import math
 import warnings
 import os
 import pycond as pc
@@ -96,6 +97,8 @@ class AwesomePagesPlugin(BasePlugin):
                     if not group.lower().endswith(".html"):
                         print("Awesome_page: on_page_content catch " + match.groups()[0])
                         self.REFERENCED_FILES_EXCEPT_HTML.append(os.path.normpath(os.path.join(file_dirname, match.group()[0])))
+                else:
+                    print("Awesome_page: on_page_content catch but can't extract value: " + match.string)
 
     def on_post_build(self, config: Config):
         to_removes = []
