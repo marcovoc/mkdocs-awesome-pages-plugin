@@ -124,7 +124,7 @@ class AwesomePagesPlugin(BasePlugin):
                     if is_to_ignore:
                         continue
                     if path not in self.REFERENCED_FILES_EXCEPT_HTML:
-                        if path not in to_removes:
+                        if path not in to_removes and not path.endswith(".css"):
                             to_removes.append(path)
         for to_remove in to_removes:
             print("Awesome_page: removed because not linked in filtered folder: " + to_remove)
