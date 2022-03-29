@@ -95,8 +95,8 @@ class AwesomePagesPlugin(BasePlugin):
                 group = match.groups()[0]
                 if group is not None :
                     if not group.lower().endswith(".html"):
-                        print("Awesome_page: on_page_content catch " + match.groups()[0])
-                        path = os.path.normpath(os.path.join(file_dirname, match.group()[0]))
+                        print("Awesome_page: on_page_content catch " + group)
+                        path = os.path.normpath(os.path.join(file_dirname, group))
                         print("debug: path: " + path)
                         self.REFERENCED_FILES_EXCEPT_HTML.append(path)
 
