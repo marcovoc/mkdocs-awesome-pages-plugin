@@ -186,6 +186,9 @@ class AwesomeNavigation:
 
         self._set_title(section, meta)
 
+        print("meta.collapse: " + str(meta.collapse))
+        print("collapse_recursive: " + str(collapse_recursive))
+
         section.children = self._process_children(section.children, collapse_recursive, meta)
 
         if section in self.explicit_sections:
@@ -193,8 +196,7 @@ class AwesomeNavigation:
 
         if not section.children:
             return None
-        print("meta.collapse: " + str(meta.collapse))
-        print("collapse_recursive: " + str(collapse_recursive))
+        
         return self._collapse(section, meta.collapse, collapse_recursive)
 
     def _get_item_path(self, item: NavigationItem) -> Optional[str]:
