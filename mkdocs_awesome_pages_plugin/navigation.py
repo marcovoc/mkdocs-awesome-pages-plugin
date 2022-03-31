@@ -175,6 +175,7 @@ class AwesomeNavigation:
         return result
 
     def _process_section(self, section: Section, collapse_recursive: bool) -> Optional[NavigationItem]:
+        print(vars(section))
         meta = self.meta.sections[section]
 
         if meta.hide is True:
