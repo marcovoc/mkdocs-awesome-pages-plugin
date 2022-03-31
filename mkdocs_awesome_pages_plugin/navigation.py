@@ -193,7 +193,8 @@ class AwesomeNavigation:
 
         if not section.children:
             return None
-
+        print("meta.collapse: " + meta.collapse)
+        print("collapse_recursive: " + collapse_recursive)
         return self._collapse(section, meta.collapse, collapse_recursive)
 
     def _get_item_path(self, item: NavigationItem) -> Optional[str]:
