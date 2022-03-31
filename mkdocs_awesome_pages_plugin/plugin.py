@@ -149,8 +149,6 @@ class AwesomePagesPlugin(BasePlugin):
             self._insert_rest(explicit_nav.items)
             nav = explicit_nav
 
-        print(self.config)
-
         return AwesomeNavigation(nav.items, Options(**self.config), config["docs_dir"], explicit_sections).to_mkdocs()
 
     def on_config(self, config: Config):

@@ -175,7 +175,6 @@ class AwesomeNavigation:
         return result
 
     def _process_section(self, section: Section, collapse_recursive: bool) -> Optional[NavigationItem]:
-        print(vars(section))
         meta = self.meta.sections[section]
 
         if meta.hide is True:
@@ -185,9 +184,6 @@ class AwesomeNavigation:
             collapse_recursive = meta.collapse_single_pages
 
         self._set_title(section, meta)
-
-        print("meta.collapse: " + str(meta.collapse))
-        print("collapse_recursive: " + str(collapse_recursive))
 
         section.children = self._process_children(section.children, collapse_recursive, meta)
 
