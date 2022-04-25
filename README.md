@@ -1,3 +1,22 @@
+# Major changes of this fork
+
+## enviroment variable condtional nav item.
+
+under nav: section a new type of item exist like:
+
+``` yaml
+    nav:
+        - analytic_dai2.md | env=[DOC_IM]
+        - analytic_flowtd.md | env=[DOC_IM] or [DOC_TE] or [DOC_VTX]
+```
+The section will be displayed only if the condition is true.
+The condition is composed of boolean [ENV_VAR] which are true if the env var exist and some basic boolean operator are available see:
+[Condition Parser](https://github.com/axiros/pycond)
+
+## Filter not referenced 
+
+Option to add at the root of a .pages which will trigger under this folder and sub folder to delete any file which is not referenced.
+
 # MkDocs Awesome Pages Plugin [![Tests Status][status-tests-badge]][status-tests-link]
 
 *An MkDocs plugin that simplifies configuring page titles and their order*
