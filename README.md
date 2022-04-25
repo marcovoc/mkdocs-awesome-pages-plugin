@@ -17,6 +17,13 @@ The condition is composed of boolean [ENV_VAR] which are true if the env var exi
 
 Option to add at the root of a .pages which will trigger under this folder and sub folder to delete any file which is not referenced.
 
+``` yaml
+    filter_not_referenced: true
+    nav:
+        - analytic_dai2.md | env=[DOC_IM]
+        - analytic_flowtd.md | env=[DOC_IM] or [DOC_TE] or [DOC_VTX]
+```
+
 # MkDocs Awesome Pages Plugin [![Tests Status][status-tests-badge]][status-tests-link]
 
 *An MkDocs plugin that simplifies configuring page titles and their order*
