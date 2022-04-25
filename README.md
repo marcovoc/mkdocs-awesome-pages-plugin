@@ -1,6 +1,6 @@
 # Major changes of this fork
 
-## enviroment variable condtional nav item.
+## enviroment variable conditional nav item.
 
 under nav: section a new type of item exist like:
 
